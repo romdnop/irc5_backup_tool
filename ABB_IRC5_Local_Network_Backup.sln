@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33423.256
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB_IRC5_Local_Network_Backup", "ABB_IRC5_Local_Network_Backup\ABB_IRC5_Local_Network_Backup.csproj", "{B1735467-D9C2-45DF-953A-F65813EC63C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1735467-D9C2-45DF-953A-F65813EC63C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1735467-D9C2-45DF-953A-F65813EC63C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1735467-D9C2-45DF-953A-F65813EC63C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1735467-D9C2-45DF-953A-F65813EC63C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3C86362-590A-4C1C-9B66-29C48884D61D}
+	EndGlobalSection
+EndGlobal
