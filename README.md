@@ -31,4 +31,6 @@ List and backup all available controllers to a local folder:
 - ABB PC [SDK 2022.3](https://developercenter.robotstudio.com/) 
 - Visual Studio 2019 Community
 
-## Latest build
+## Latest builds
+
+- [ABB IRC5 Local Network Backup V0.1](https://github.com/romdnop/irc5_backup_tool/releases/tag/v0.1)
