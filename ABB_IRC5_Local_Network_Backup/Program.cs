@@ -10,6 +10,8 @@ using ABB.Robotics.Controllers;
 using ABB.Robotics.Controllers.UserAuthorizationManagement;
 using ABB.Robotics.Controllers.FileSystemDomain;
 using CommandLine;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace ABB_IRC5_Local_Network_Backup
 {
@@ -24,11 +26,13 @@ namespace ABB_IRC5_Local_Network_Backup
             [Option('o', Required = false, HelpText = "Defines local folder for backups. Example: -o \"C:\\Users\\User\\Documents\\Robostudio Backups\\Auto\\\"")]
             public string OutputDir { get; set; }
 
-            [Option('a', Required = true, HelpText = "Backup all available controllers (including virtual ones).")]
+            [Option('a', Required = false, HelpText = "Backup all available controllers (including virtual ones).")]
             public bool backupAll { get; set; }
 
             [Option('l', Required = false, HelpText = "List all available controllers (including virtual ones).")]
             public bool list { get; set; }
+
+            //Version version { get; set; }
         }
         static void Main(string[] args)
         {
@@ -39,9 +43,10 @@ namespace ABB_IRC5_Local_Network_Backup
                .WithParsed<Options>(o =>
                {
                    //detecting all controllers
-                   ControllerInfoCollection controllersAvailable = findControllers(o.backupAll);
-                   string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                   string destinationFolder = System.IO.Path.Combine(userFolder, "Documents\\RobotStudio Backups\\Auto Backups");
+                   //if(o.backupAll)
+                   ControllerInfoCollection controllersAvailable = findControllers(true);
+                   //string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                   string destinationFolder = System.IO.Path.Combine("./");//"Documents\\RobotStudio Backups\\Auto Backups");
                    if (o.OutputDir != null)
                    {
                        //Console.WriteLine($"Verbose output enabled. Current Arguments: -v {o.Verbose}");
@@ -55,8 +60,18 @@ namespace ABB_IRC5_Local_Network_Backup
                    if (o.list)
                    {
                        listAllCOntrollers(findControllers(true));
+                       if (args.Length == 1)
+                       { 
+                           return; 
+                       } 
                    }
-                   backupAllControllers(controllersAvailable, destinationFolder);
+                   if (controllersAvailable.Count > 0)
+                   {
+                       backupAllControllers(controllersAvailable, destinationFolder);
+                   }
+                   else{ 
+                       Console.WriteLine("No IRC5 controllers have been found.\n Exiting....");
+                   }
                });
         }
         
