@@ -27,9 +27,14 @@ List and backup all available controllers to a local folder:
 
 ## Build requirements
 
-- .NET Framework 4.8.1
+- .NET 7.0
 - ABB PC [SDK 2022.3](https://developercenter.robotstudio.com/) 
-- Visual Studio 2019 Community
+- Visual Studio 2022 Community
+
+## Changes
+## V0.2
+- Target framework changed to .NET 7.0 allowing cross-compilation and self-contained executable file.
+- README file updated
 
 ## Latest builds
 

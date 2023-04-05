@@ -12,6 +12,7 @@ using ABB.Robotics.Controllers.FileSystemDomain;
 using CommandLine;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using ABB.Robotics.Controllers.Configuration;
 
 namespace ABB_IRC5_Local_Network_Backup
 {
@@ -36,10 +37,8 @@ namespace ABB_IRC5_Local_Network_Backup
         }
         static void Main(string[] args)
         {
-            
-
             //parsing command-line options
-            Parser.Default.ParseArguments<Options>(args)
+            CommandLine.Parser.Default.ParseArguments<Options>(args)
                .WithParsed<Options>(o =>
                {
                    //detecting all controllers
@@ -61,22 +60,23 @@ namespace ABB_IRC5_Local_Network_Backup
                    {
                        listAllCOntrollers(findControllers(true));
                        if (args.Length == 1)
-                       { 
-                           return; 
-                       } 
+                       {
+                           return;
+                       }
                    }
                    if (controllersAvailable.Count > 0)
                    {
                        backupAllControllers(controllersAvailable, destinationFolder);
                    }
-                   else{ 
+                   else
+                   {
                        Console.WriteLine("No IRC5 controllers have been found.\n Exiting....");
                    }
                });
         }
-        
 
-       static ControllerInfoCollection findControllers(bool includingVirtual=false)
+
+        static ControllerInfoCollection findControllers(bool includingVirtual = false)
         {
             NetworkScanner scanner = null;
             scanner = new NetworkScanner();
@@ -85,7 +85,7 @@ namespace ABB_IRC5_Local_Network_Backup
             if (!includingVirtual)
             {
                 //requires refactoring
-                for (int i=0;i<controllers.Count;i++)
+                for (int i = 0; i < controllers.Count; i++)
                 {
                     if (controllers[i].IsVirtual)
                         controllers.RemoveAt(i);
@@ -105,8 +105,8 @@ namespace ABB_IRC5_Local_Network_Backup
                 Console.WriteLine("SystemID: " + controllerInfo.SystemId);
                 //Console.WriteLine("" + controllerInfo.Availability.ToString());
                 Console.WriteLine("IsVirtual: " + controllerInfo.IsVirtual.ToString());
-                Console.WriteLine("System Name: "+controllerInfo.SystemName);
-                Console.WriteLine("RobotWare Version: "+controllerInfo.Version.ToString());
+                Console.WriteLine("System Name: " + controllerInfo.SystemName);
+                Console.WriteLine("RobotWare Version: " + controllerInfo.Version.ToString());
                 Console.WriteLine("Controller Name" + controllerInfo.ControllerName);
                 Console.WriteLine("-----------------------------------");
             }
@@ -114,7 +114,7 @@ namespace ABB_IRC5_Local_Network_Backup
 
         static bool createBackup(ControllerInfo controllerInfo, string localFolderPath, string backupName)
         {
-            
+
             Controller currentController = Controller.Connect(controllerInfo, ConnectionType.Standalone, true);
             string message = string.Format("Creating backup {1} for controller: {0} with IP: {2}", controllerInfo.ControllerName, backupName, controllerInfo.IPAddress.ToString());
             Console.Write(message);
@@ -123,18 +123,18 @@ namespace ABB_IRC5_Local_Network_Backup
             currentController.Backup("..\\BKP\\" + backupName); //in relation to remoteBackupDir
 
             while (currentController.BackupInProgress) { }; //can stuck here
-            
-            Console.WriteLine(string.Format("{0} Backup was saved on the controller!",DateTime.Now.ToString("dd/MM/yyyy HH:mm")));
-            logToFile(localFolderPath, string.Format("Backup saved on controller: {0} Path: {1}", controllerInfo.ControllerName, "\\BKP\\"+backupName));
-            string localBackupDirPath = System.IO.Path.Combine(localFolderPath,backupName);//"C:\\Users\\User\\Documents\\Robostudio Backups\\Auto\\" + backupName;
+
+            Console.WriteLine(string.Format("{0} Backup was saved on the controller!", DateTime.Now.ToString("dd/MM/yyyy HH:mm")));
+            logToFile(localFolderPath, string.Format("Backup saved on controller: {0} Path: {1}", controllerInfo.ControllerName, "\\BKP\\" + backupName));
+            string localBackupDirPath = System.IO.Path.Combine(localFolderPath, backupName);//"C:\\Users\\User\\Documents\\Robostudio Backups\\Auto\\" + backupName;
             Console.WriteLine("Attempting to copy the backup to: " + localBackupDirPath);
-            logToFile(localFolderPath, "Attempting to copy backup from the controller to: "+ localBackupDirPath);
+            logToFile(localFolderPath, "Attempting to copy backup from the controller to: " + localBackupDirPath);
             Console.WriteLine(localBackupDirPath);
             currentController.FileSystem.GetDirectory("..\\BKP\\" + backupName, localBackupDirPath);
-            logToFile(localFolderPath,"Compressing backup into: "+ localBackupDirPath + ".zip");
-            ZipFile.CreateFromDirectory(localBackupDirPath, localBackupDirPath+".zip");
+            logToFile(localFolderPath, "Compressing backup into: " + localBackupDirPath + ".zip");
+            ZipFile.CreateFromDirectory(localBackupDirPath, localBackupDirPath + ".zip");
             logToFile(localFolderPath, "Backup compressed successfuly.");
-            System.IO.Directory.Delete(localBackupDirPath,true);
+            System.IO.Directory.Delete(localBackupDirPath, true);
             logToFile(localFolderPath, "Temporary backup folder deleted.");
 
             return true;//requires refactoring
@@ -148,12 +148,12 @@ namespace ABB_IRC5_Local_Network_Backup
                 //Console.WriteLine(bkp_name);
                 createBackup(controller, localFolder, bkp_name);
             }
-            
+
         }
 
         static void logToFile(string logFolderPath, string message)
         {
-            using (StreamWriter w = File.AppendText(Path.Combine(logFolderPath,"backup_log.txt")))
+            using (StreamWriter w = File.AppendText(Path.Combine(logFolderPath, "backup_log.txt")))
             {
                 w.Write(DateTime.Now.ToString("dd/MM/yyyy HH:mm "));
                 w.WriteLine(message);
